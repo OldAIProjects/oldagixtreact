@@ -8,7 +8,7 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import UpgradeRoundedIcon from "@mui/icons-material/UpgradeRounded";
 
-import { useState } from "react";
+import { use, useState } from "react";
 
 import AgentsSettings from "./agentsComponents/AgentsSettings";
 import AgentsCommands from "./agentsComponents/AgentsCommands";
@@ -19,9 +19,12 @@ import {
   updateElement,
   deleteElement,
 } from "@/lib/wrappers/MiddleButtonWrapper";
+import { useSelector } from "react-redux";
 
-function MiddleComponent({ selectedContent, name, setName, data, setData }) {
+function MiddleComponent({ name, setName, data, setData }) {
   const [value, setValue] = useState("settings");
+
+  const selectedContent = useSelector((state) => state.environment);
 
   return (
     <Paper elevation={3} rounded sx={{ width: "100%", height: "100%", pt: 2 }}>

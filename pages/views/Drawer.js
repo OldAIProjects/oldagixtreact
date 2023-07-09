@@ -17,6 +17,11 @@ import MailIcon from "@mui/icons-material/Mail";
 import CustomAppBar from "./AppBar";
 import Image from "next/image";
 
+import Layout from "./Layout";
+import { useDispatch } from "react-redux";
+
+import { updateEnvironment } from "@/lib/actions/environmentActions";
+
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -70,6 +75,8 @@ export default function PersistentDrawerLeft({ contentHandler, children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+  const dispatch = useDispatch();
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -121,7 +128,7 @@ export default function PersistentDrawerLeft({ contentHandler, children }) {
             <ListItem key={item.text} disablePadding>
               <ListItemButton
                 onClick={() => {
-                  contentHandler(item.text);
+                  dispatch(updateEnvironment(item.text));
                 }}
               >
                 <ListItemIcon>{item.icon}</ListItemIcon>
@@ -133,7 +140,7 @@ export default function PersistentDrawerLeft({ contentHandler, children }) {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        {children}
+        <Layout />
       </Main>
     </Box>
   );

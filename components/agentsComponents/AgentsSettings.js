@@ -52,7 +52,6 @@ const AgentsSettings = () => {
     dispatch(retrieveProvider())
       .then((res) => {
         setProviders(res);
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -66,7 +65,6 @@ const AgentsSettings = () => {
   useEffect(() => {
     dispatch(retrieveProviderByName(currentProvider))
       .then((res) => {
-        console.log(res);
         setAgentData({
           ...agentData,
           settings: res.settings,
