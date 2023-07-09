@@ -6,7 +6,7 @@ import Switch from "@mui/material/Switch";
 
 import { useEffect, useState } from "react";
 
-import { retrieveAgentCommandsByName } from "@/pages/actions/agentsActions";
+import { retrieveAgentCommandsByName } from "@/lib/actions/agentsActions";
 
 import { useDispatch } from "react-redux";
 
