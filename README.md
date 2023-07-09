@@ -22,7 +22,7 @@ AGiXT is an Artificial Intelligence Automation Platform designed to power effici
 
 ```
 git clone https://github.com/AGiXT/react
-cd nextjs
+cd react
 npm install
 npm run dev
 ```
