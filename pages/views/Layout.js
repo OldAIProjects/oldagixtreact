@@ -2,7 +2,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
-import MiddleComponent from "./MiddleComponent";
+import MiddleComponent from "@/components/MiddleComponent";
 
 function Layout({ selectedContent }) {
   return (

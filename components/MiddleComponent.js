@@ -10,20 +10,19 @@ import UpgradeRoundedIcon from "@mui/icons-material/UpgradeRounded";
 
 import { useState } from "react";
 
-import AgentsSettings from "./AgentsSettings";
-import AgentsCommands from "./AgentsCommands";
-import AgentsTabs from "./AgentsTabs";
+import AgentsSettings from "./agentsComponents/AgentsSettings";
+import AgentsCommands from "./agentsComponents/AgentsCommands";
+import AgentsTabs from "./agentsComponents/AgentsTabs";
 
 import {
   addElement,
   updateElement,
   deleteElement,
-} from "./MiddleButtonWrapper";
+} from "@/lib/wrappers/MiddleButtonWrapper";
 
 function MiddleComponent({ selectedContent, name, setName, data, setData }) {
   const [value, setValue] = useState("settings");
 
-  console.log(selectedContent);
   return (
     <Paper elevation={3} rounded sx={{ width: "100%", height: "100%", pt: 2 }}>
       <Grid

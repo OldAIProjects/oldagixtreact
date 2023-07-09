@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import {
   retrieveProvider,
   retrieveProviderByName,
-} from "@/pages/actions/providerActions";
+} from "@/lib/actions/providerActions";
 
 function ProvidersRender({ agentData, setAgentData }) {
   return (
