@@ -9,17 +9,18 @@ import { useDispatch } from "react-redux";
 import {
   retrieveProvider,
   retrieveProviderByName,
+  retrieveEmbeddingProviders,
 } from "@/lib/actions/providerActions";
 
 function ProvidersRender({ agentData, setAgentData }) {
   return (
     <>
       {Object.entries(agentData.settings).map(([key, value], id) => {
-        const default_keys = ["name", "provider"];
+        const default_keys = ["name", "provider", "embedder"];
 
         if (default_keys.includes(key) === false) {
           return (
-            <Grid item xs={4}>
+            <Grid item xs={4} key={key}>
               <TextField
                 id={id.toString().concat("_", key)}
                 label={key}
@@ -51,8 +52,7 @@ const AgentsSettings = () => {
   useEffect(() => {
     dispatch(retrieveProvider())
       .then((res) => {
-        setProviders(res);
-        console.log(res);
+        setProviders(res.providers ? res.providers : res);
       })
       .catch((err) => {
         console.log(err);
@@ -60,13 +60,12 @@ const AgentsSettings = () => {
   }, [providers]);
 
   // agent data based on provider hlanding
-  const [currentProvider, setcurrentProvider] = useState("openai");
+  const [currentProvider, setcurrentProvider] = useState("runpod");
   const [agentData, setAgentData] = useState();
 
   useEffect(() => {
     dispatch(retrieveProviderByName(currentProvider))
       .then((res) => {
-        console.log(res);
         setAgentData({
           ...agentData,
           settings: res.settings,
@@ -76,6 +75,19 @@ const AgentsSettings = () => {
         console.log(err);
       });
   }, [currentProvider]);
+
+  const [currentEmbeddingProviders, setCurrentProvider] = useState("azure");
+  const [embeddingProviders, setEmbeddingProviders] = useState();
+
+  useEffect(() => {
+    dispatch(retrieveEmbeddingProviders())
+      .then((res) => {
+        setEmbeddingProviders(res.providers ? res.providers : res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [embeddingProviders]);
 
   return (
     <Box sx={{ padding: 2, overflow: "hidden" }}>
@@ -112,6 +124,31 @@ const AgentsSettings = () => {
             id={"providers"}
             renderInput={(params) => (
               <TextField {...params} label={"providers"} />
+            )}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <Autocomplete
+            options={
+              !embeddingProviders
+                ? [currentEmbeddingProviders]
+                : embeddingProviders
+            }
+            value={currentEmbeddingProviders}
+            autoComplete
+            fullWidth
+            onChange={(e, newValue) => {
+              setAgentData({
+                ...agentData,
+                settings: { ...agentData.settings, embedder: newValue },
+              });
+              setCurrentProvider(
+                newValue !== null ? newValue : currentEmbeddingProviders
+              );
+            }}
+            id={"embedders"}
+            renderInput={(params) => (
+              <TextField {...params} label={"embedders"} />
             )}
           />
         </Grid>

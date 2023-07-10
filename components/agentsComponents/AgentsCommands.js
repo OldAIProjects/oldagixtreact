@@ -18,7 +18,7 @@ function AgentsCommands() {
   useEffect(() => {
     dispatch(retrieveAgentCommandsByName("OobaStarchat"))
       .then((res) => {
-        setCommands(res.commands);
+        setCommands(res);
       })
       .catch((err) => {
         console.log(err);
@@ -32,6 +32,7 @@ function AgentsCommands() {
           {Object.entries(commands).map(([key, value]) => {
             return (
               <FormControlLabel
+                key={key}
                 label={key}
                 control={
                   <Switch

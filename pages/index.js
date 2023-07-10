@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 
-import DashBoard from "./dashBoard";
 import PersistentDrawerLeft from "./views/Drawer";
 
 import Box from "@mui/material/Box";
 
 export default function App() {
-  const [selectedContent, setSelectedContent] = useState("Agents");
-
   return (
     <Box
       sx={{
@@ -17,9 +14,7 @@ export default function App() {
         overflow: "hidden",
       }}
     >
-      <PersistentDrawerLeft contentHandler={setSelectedContent}>
-        <DashBoard selectedContent={selectedContent} />
-      </PersistentDrawerLeft>
+      <PersistentDrawerLeft />
     </Box>
   );
 }
