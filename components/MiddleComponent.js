@@ -21,13 +21,17 @@ import {
 } from "@/lib/wrappers/MiddleButtonWrapper";
 import { useSelector } from "react-redux";
 
-function MiddleComponent({ name, setName, data, setData }) {
+function MiddleComponent() {
   const [value, setValue] = useState("settings");
 
   const selectedContent = useSelector((state) => state.environment);
 
   return (
-    <Paper elevation={3} rounded sx={{ width: "100%", height: "100%", pt: 2 }}>
+    <Paper
+      elevation={3}
+      rounded={+true}
+      sx={{ width: "100%", height: "100%", pt: 2 }}
+    >
       <Grid
         container
         direction="column"
@@ -43,7 +47,7 @@ function MiddleComponent({ name, setName, data, setData }) {
         </Grid>
         <Grid item xs={10} sx={{ overflow: "auto" }}>
           {selectedContent === "Agents" &&
-            ((value === "settings" && <AgentsSettings setData={setData} />) ||
+            ((value === "settings" && <AgentsSettings />) ||
               (value === "commands" && <AgentsCommands />))}
         </Grid>
         <Grid item xs={1}>
@@ -59,7 +63,7 @@ function MiddleComponent({ name, setName, data, setData }) {
                 <Button
                   startIcon={<AddRoundedIcon />}
                   onClick={() => {
-                    addElement(selectedContent, data, name);
+                    addElement(selectedContent);
                   }}
                 >
                   Create
@@ -67,7 +71,7 @@ function MiddleComponent({ name, setName, data, setData }) {
                 <Button
                   startIcon={<UpgradeRoundedIcon />}
                   onClick={() => {
-                    updateElement(selectedContent, data, name);
+                    updateElement(selectedContent);
                   }}
                 >
                   Update
@@ -75,7 +79,7 @@ function MiddleComponent({ name, setName, data, setData }) {
                 <Button
                   startIcon={<DeleteRoundedIcon />}
                   onClick={() => {
-                    deleteElement({ selectedContent: selectedContent });
+                    deleteElement(selectedContent);
                   }}
                 >
                   Delete
