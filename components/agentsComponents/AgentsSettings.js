@@ -3,18 +3,17 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 
-import { useState } from "react";
-
 import { useSelector, useDispatch } from "react-redux";
 
 import { updateCurrentAgent } from "@/lib/actions/agentsActions";
+import { retrieveProviderByName } from "@/lib/actions/providerActions";
 
 const ProvidersRender = () => {
   return (
     <>
       {Object.entries(
         useSelector((state) => state.agent.current_agent.agent?.settings) ||
-          useSelector((state) => state.provider.providers_settings[0])
+          "Loading"
       ).map(([key, value], id) => {
         const default_keys = ["name", "provider", "embedder"];
 
@@ -37,10 +36,12 @@ const ProvidersRender = () => {
 };
 
 const AgentsSettings = () => {
-  const [currentProvider, setcurrentProvider] = useState("runpod");
-  const [currentEmbeddingProviders, setCurrentProvider] = useState("azure");
-
   const dispatch = useDispatch();
+
+  const current_embedder =
+    useSelector(
+      (state) => state.agent.current_agent.agent?.settings.embedder
+    ) || "Loading";
 
   return (
     <Box sx={{ padding: 2, overflow: "hidden" }}>
@@ -80,6 +81,15 @@ const AgentsSettings = () => {
                   value: newValue,
                 })
               );
+              dispatch(retrieveProviderByName(newValue)).then((res) => {
+                dispatch(
+                  updateCurrentAgent({
+                    name: "update_provider",
+                    key: res,
+                    value: current_embedder,
+                  })
+                );
+              });
             }}
             id={"providers"}
             renderInput={(params) => (
@@ -98,19 +108,12 @@ const AgentsSettings = () => {
             autoComplete
             fullWidth
             onChange={(e, newValue) => {
-              setCurrentProvider(
-                newValue !== null
-                  ? dispatch(
-                      updateCurrentAgent({
-                        name: "settings",
-                        key: "embedder",
-                        value: newValue,
-                      })
-                    )
-                  : useSelector(
-                      (state) =>
-                        state.agent.current_agent.agent.settings.embedder
-                    )
+              dispatch(
+                updateCurrentAgent({
+                  name: "settings",
+                  key: "embedder",
+                  value: newValue,
+                })
               );
             }}
             id={"embedders"}
