@@ -9,11 +9,13 @@ import { updateCurrentAgent } from "@/lib/actions/agentsActions";
 import { retrieveProviderByName } from "@/lib/actions/providerActions";
 
 const ProvidersRender = () => {
+  const dispatch = useDispatch();
   return (
     <>
       {Object.entries(
-        useSelector((state) => state.agent.current_agent.agent?.settings) ||
-          "Loading"
+        useSelector((state) => state.agent.current_agent.agent?.settings) || {
+          loading: "Loading",
+        }
       ).map(([key, value], id) => {
         const default_keys = ["name", "provider", "embedder"];
 
@@ -25,7 +27,15 @@ const ProvidersRender = () => {
                 label={key}
                 defaultValue={value}
                 fullWidth
-                onChange={(e) => {}}
+                onChange={(e) => {
+                  dispatch(
+                    updateCurrentAgent({
+                      name: "settings",
+                      key: key,
+                      value: e.target.value,
+                    })
+                  );
+                }}
               />
             </Grid>
           );
@@ -43,6 +53,9 @@ const AgentsSettings = () => {
       (state) => state.agent.current_agent.agent?.settings.embedder
     ) || "Loading";
 
+  const name =
+    useSelector((state) => state.agent.current_agent?.name) || "loading";
+
   return (
     <Box sx={{ padding: 2, overflow: "hidden" }}>
       <Grid container spacing={2}>
@@ -52,8 +65,8 @@ const AgentsSettings = () => {
             required
             fullWidth
             value={
-              useSelector((state) => state.agent.current_agent?.name) ||
-              "loading"
+              useSelector((state) => state.agent.current_agent?.new_name) ||
+              name
             }
             label={"Name"}
             onChange={(e) => {

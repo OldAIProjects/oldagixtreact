@@ -18,7 +18,7 @@ import CustomAppBar from "./AppBar";
 import Image from "next/image";
 
 import Layout from "./Layout";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { loader } from "@/lib/loader";
 
@@ -71,7 +71,7 @@ const drawerItems = [
   },
 ];
 
-export default function PersistentDrawerLeft({ contentHandler, children }) {
+export default function PersistentDrawerLeft() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -84,6 +84,19 @@ export default function PersistentDrawerLeft({ contentHandler, children }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const isLoading = useSelector((state) => {
+    switch (state.environment.selectedContent) {
+      case "Agents":
+        return state.environment.isAgentsLoading;
+      case "Prompts":
+        return state.environment.isPromptsLoading;
+      case "Chains":
+        return state.environment.isChainsLoading;
+      case "Interactions":
+        return state.environment.isInteractionsLoading;
+    }
+  });
 
   return (
     <Box sx={{ display: "flex", flexGrow: 1 }}>
@@ -140,7 +153,7 @@ export default function PersistentDrawerLeft({ contentHandler, children }) {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <Layout />
+        {isLoading ? <div></div> : <Layout />}
       </Main>
     </Box>
   );
