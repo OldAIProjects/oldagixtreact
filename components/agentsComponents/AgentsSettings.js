@@ -3,19 +3,18 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 
-import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
-import { useDispatch } from "react-redux";
-import {
-  retrieveProvider,
-  retrieveProviderByName,
-  retrieveEmbeddingProviders,
-} from "@/lib/actions/providerActions";
+import { updateCurrentAgent } from "@/lib/actions/agentsActions";
+import { retrieveProviderByName } from "@/lib/actions/providerActions";
 
-function ProvidersRender({ agentData, setAgentData }) {
+const ProvidersRender = () => {
   return (
     <>
-      {Object.entries(agentData.settings).map(([key, value], id) => {
+      {Object.entries(
+        useSelector((state) => state.agent.current_agent.agent?.settings) ||
+          "Loading"
+      ).map(([key, value], id) => {
         const default_keys = ["name", "provider", "embedder"];
 
         if (default_keys.includes(key) === false) {
@@ -26,15 +25,7 @@ function ProvidersRender({ agentData, setAgentData }) {
                 label={key}
                 defaultValue={value}
                 fullWidth
-                onChange={(e) =>
-                  setAgentData({
-                    ...agentData,
-                    settings: {
-                      ...agentData.settings,
-                      [key]: e.target.value,
-                    },
-                  })
-                }
+                onChange={(e) => {}}
               />
             </Grid>
           );
@@ -42,52 +33,15 @@ function ProvidersRender({ agentData, setAgentData }) {
       })}
     </>
   );
-}
+};
 
 const AgentsSettings = () => {
-  // providers handling
-  const [providers, setProviders] = useState("");
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(retrieveProvider())
-      .then((res) => {
-        setProviders(res.providers ? res.providers : res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [providers]);
-
-  // agent data based on provider hlanding
-  const [currentProvider, setcurrentProvider] = useState("runpod");
-  const [agentData, setAgentData] = useState();
-
-  useEffect(() => {
-    dispatch(retrieveProviderByName(currentProvider))
-      .then((res) => {
-        setAgentData({
-          ...agentData,
-          settings: res.settings,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [currentProvider]);
-
-  const [currentEmbeddingProviders, setCurrentProvider] = useState("azure");
-  const [embeddingProviders, setEmbeddingProviders] = useState();
-
-  useEffect(() => {
-    dispatch(retrieveEmbeddingProviders())
-      .then((res) => {
-        setEmbeddingProviders(res.providers ? res.providers : res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [embeddingProviders]);
+  const current_embedder =
+    useSelector(
+      (state) => state.agent.current_agent.agent?.settings.embedder
+    ) || "Loading";
 
   return (
     <Box sx={{ padding: 2, overflow: "hidden" }}>
@@ -97,29 +51,45 @@ const AgentsSettings = () => {
             id={"name"}
             required
             fullWidth
-            label={"Name"}
-            onChange={(e) =>
-              setAgentData({
-                ...agentData,
-                settings: { ...agentData.settings, name: e.target.value },
-              })
+            value={
+              useSelector((state) => state.agent.current_agent?.name) ||
+              "loading"
             }
+            label={"Name"}
+            onChange={(e) => {
+              dispatch(
+                updateCurrentAgent({ name: "name", value: e.target.value })
+              );
+            }}
           />
         </Grid>
         <Grid item xs={4}>
           <Autocomplete
-            options={!providers ? [currentProvider] : providers}
-            value={currentProvider}
+            options={useSelector((state) => state.provider.providers_names)}
+            value={
+              useSelector(
+                (state) => state.agent.current_agent.agent?.settings.provider
+              ) || "loading"
+            }
             autoComplete
             fullWidth
             onChange={(e, newValue) => {
-              setAgentData({
-                ...agentData,
-                settings: { ...agentData.settings, provider: newValue },
-              });
-              setcurrentProvider(
-                newValue !== null ? newValue : currentProvider
+              dispatch(
+                updateCurrentAgent({
+                  name: "settings",
+                  key: "provider",
+                  value: newValue,
+                })
               );
+              dispatch(retrieveProviderByName(newValue)).then((res) => {
+                dispatch(
+                  updateCurrentAgent({
+                    name: "update_provider",
+                    key: res,
+                    value: current_embedder,
+                  })
+                );
+              });
             }}
             id={"providers"}
             renderInput={(params) => (
@@ -129,21 +99,21 @@ const AgentsSettings = () => {
         </Grid>
         <Grid item xs={4}>
           <Autocomplete
-            options={
-              !embeddingProviders
-                ? [currentEmbeddingProviders]
-                : embeddingProviders
+            options={useSelector((state) => state.provider.embedding_providers)}
+            value={
+              useSelector(
+                (state) => state.agent.current_agent.agent?.settings.embedder
+              ) || "loading"
             }
-            value={currentEmbeddingProviders}
             autoComplete
             fullWidth
             onChange={(e, newValue) => {
-              setAgentData({
-                ...agentData,
-                settings: { ...agentData.settings, embedder: newValue },
-              });
-              setCurrentProvider(
-                newValue !== null ? newValue : currentEmbeddingProviders
+              dispatch(
+                updateCurrentAgent({
+                  name: "settings",
+                  key: "embedder",
+                  value: newValue,
+                })
               );
             }}
             id={"embedders"}
@@ -152,9 +122,7 @@ const AgentsSettings = () => {
             )}
           />
         </Grid>
-        {agentData && (
-          <ProvidersRender agentData={agentData} setAgentData={setAgentData} />
-        )}
+        <ProvidersRender />
       </Grid>
     </Box>
   );

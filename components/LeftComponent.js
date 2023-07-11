@@ -3,27 +3,12 @@ import { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import { Button, Grid, Paper } from "@mui/material";
 
-import {
-  retrieveAgent,
-  retrieveAgentByName,
-  updateCurrentAgent,
-} from "@/lib/actions/agentsActions";
+import { setCurrentAgent } from "@/lib/actions/agentsActions";
 
 export default function LeftComponent() {
-  const selectedContent = useSelector((state) => state.environment);
-
-  const [agents, setAgents] = useState([]);
+  const selectedContent = useSelector((state) => state.environment.selectedContent);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(retrieveAgent())
-      .then((res) => {
-        setAgents(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
   if (selectedContent === "Agents") {
     return (
       <Grid
@@ -32,14 +17,14 @@ export default function LeftComponent() {
         spacing={2}
         sx={{ p: 2, overflowY: "auto" }}
       >
-        {agents.map((value) => {
+        {useSelector((state) => state.agent.agents_names).map((value) => {
           return (
             <Grid item xs key={value}>
               <Paper elevation={5} sx={{ width: "100%", height: "100%" }}>
                 <Button
                   sx={{ width: "100%", height: "100%" }}
                   onClick={() => {
-                    dispatch(updateCurrentAgent(value));
+                    dispatch(setCurrentAgent(value));
                   }}
                 >
                   <Typography variant="h6" component="h2" align="center">

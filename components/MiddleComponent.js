@@ -8,7 +8,7 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import UpgradeRoundedIcon from "@mui/icons-material/UpgradeRounded";
 
-import { use, useState } from "react";
+import { useState } from "react";
 
 import AgentsSettings from "./agentsComponents/AgentsSettings";
 import AgentsCommands from "./agentsComponents/AgentsCommands";
@@ -19,12 +19,31 @@ import {
   updateElement,
   deleteElement,
 } from "@/lib/wrappers/MiddleButtonWrapper";
-import { useSelector } from "react-redux";
+
+import { useSelector, useDispatch } from "react-redux";
 
 function MiddleComponent() {
   const [value, setValue] = useState("settings");
 
-  const selectedContent = useSelector((state) => state.environment);
+  const selectedContent = useSelector(
+    (state) => state.environment.selectedContent
+  );
+
+  const dispatch = useDispatch();
+
+  const name = useSelector((state) => {
+    if (selectedContent === "Agents") return state.agent.current_agent.name;
+    // if (selectedContent === "Prompts") return state.prompt.prompt_name;
+  });
+
+  const data = useSelector((state) => {
+    if (selectedContent === "Agents") return state.agent.current_agent;
+    // if (selectedContent === "Prompts") return state.prompt.current_prompt;
+  });
+
+  const isAgentsLoading = useSelector(
+    (state) => state.environment.isAgentsLoading
+  );
 
   return (
     <Paper
@@ -40,15 +59,19 @@ function MiddleComponent() {
       >
         <Grid item xs={1}>
           <Box display="flex" justifyContent="center">
-            {selectedContent === "Agents" && (
-              <AgentsTabs value={value} setValue={setValue} />
-            )}
+            {isAgentsLoading
+              ? <></>
+              : selectedContent === "Agents" && (
+                  <AgentsTabs value={value} setValue={setValue} />
+                )}
           </Box>
         </Grid>
         <Grid item xs={10} sx={{ overflow: "auto" }}>
-          {selectedContent === "Agents" &&
-            ((value === "settings" && <AgentsSettings />) ||
-              (value === "commands" && <AgentsCommands />))}
+          {isAgentsLoading
+            ? <></>
+            : selectedContent === "Agents" &&
+              ((value === "settings" && <AgentsSettings />) ||
+                (value === "commands" && <AgentsCommands />))}
         </Grid>
         <Grid item xs={1}>
           <Box display="flex" justifyContent="center">
@@ -63,7 +86,7 @@ function MiddleComponent() {
                 <Button
                   startIcon={<AddRoundedIcon />}
                   onClick={() => {
-                    addElement(selectedContent);
+                    addElement(selectedContent, name, data, dispatch);
                   }}
                 >
                   Create
@@ -71,7 +94,7 @@ function MiddleComponent() {
                 <Button
                   startIcon={<UpgradeRoundedIcon />}
                   onClick={() => {
-                    updateElement(selectedContent);
+                    updateElement(selectedContent, name, data, dispatch);
                   }}
                 >
                   Update
@@ -79,7 +102,7 @@ function MiddleComponent() {
                 <Button
                   startIcon={<DeleteRoundedIcon />}
                   onClick={() => {
-                    deleteElement(selectedContent);
+                    deleteElement(selectedContent, name, dispatch);
                   }}
                 >
                   Delete

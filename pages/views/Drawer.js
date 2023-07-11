@@ -20,7 +20,7 @@ import Image from "next/image";
 import Layout from "./Layout";
 import { useDispatch } from "react-redux";
 
-import { updateEnvironment } from "@/lib/actions/environmentActions";
+import { loader } from "@/lib/loader";
 
 const drawerWidth = 240;
 
@@ -128,7 +128,7 @@ export default function PersistentDrawerLeft({ contentHandler, children }) {
             <ListItem key={item.text} disablePadding>
               <ListItemButton
                 onClick={() => {
-                  dispatch(updateEnvironment(item.text));
+                  loader(item.text, dispatch);
                 }}
               >
                 <ListItemIcon>{item.icon}</ListItemIcon>

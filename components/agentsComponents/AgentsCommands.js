@@ -4,32 +4,55 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import Switch from "@mui/material/Switch";
 
-import { useEffect, useState } from "react";
+import { updateCurrentAgent } from "@/lib/actions/agentsActions";
 
-import { retrieveAgentCommandsByName } from "@/lib/actions/agentsActions";
+import { useState } from "react";
 
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+const SelectAll = (keys, value, dispacth) => {
+  Object.keys(keys).map((key) => {
+    console.log(key);
+    dispacth(
+      updateCurrentAgent({
+        name: "commands",
+        key: key,
+        value: value,
+      })
+    );
+  });
+};
 
 function AgentsCommands() {
-  const [commands, setCommands] = useState("");
-
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(retrieveAgentCommandsByName("OobaStarchat"))
-      .then((res) => {
-        setCommands(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  const keys = useSelector(
+    (state) => state.agent.current_agent.agent?.commands
+  );
+
+  const [selectAll, setSelectAll] = useState(false);
 
   return (
     <Box sx={{ pl: 5, overflow: "hidden" }}>
       <FormControl component="fieldset" variant="standard">
         <FormGroup>
-          {Object.entries(commands).map(([key, value]) => {
+          <FormControlLabel
+            key="Select All"
+            label="Select All"
+            control={
+              <Switch
+                checked={selectAll}
+                onChange={(e) => {
+                  setSelectAll(e.target.checked);
+                  SelectAll(keys, e.target.checked, dispatch);
+                }}
+                name="Select All"
+              />
+            }
+          />
+          {Object.entries(
+            useSelector((state) => state.agent.current_agent.agent.commands)
+          ).map(([key, value]) => {
             return (
               <FormControlLabel
                 key={key}
@@ -38,10 +61,13 @@ function AgentsCommands() {
                   <Switch
                     checked={value}
                     onChange={(e) => {
-                      setCommands({
-                        ...commands,
-                        [key]: e.target.checked,
-                      });
+                      dispatch(
+                        updateCurrentAgent({
+                          name: "commands",
+                          key: key,
+                          value: e.target.checked,
+                        })
+                      );
                     }}
                     name={key}
                   />
