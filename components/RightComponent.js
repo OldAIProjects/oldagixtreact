@@ -1,14 +1,10 @@
 import { useSelector } from "react-redux";
 
-import Typography from "@mui/material/Typography";
+import { AgentsRight } from "@/components/agentsComponents/Agents";
 
 export default function RightComponent() {
   const selectedContent = useSelector(
     (state) => state.environment.selectedContent
   );
-  return (
-    <Typography variant="h6" component="h2" align="center">
-      {selectedContent}
-    </Typography>
-  );
+  return <>{selectedContent === "agents" && <AgentsRight />}</>;
 }

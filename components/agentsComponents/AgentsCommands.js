@@ -6,13 +6,12 @@ import Switch from "@mui/material/Switch";
 
 import { updateCurrentAgent } from "@/lib/actions/agentsActions";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 
 const SelectAll = (keys, value, dispacth) => {
   Object.keys(keys).map((key) => {
-    console.log(key);
     dispacth(
       updateCurrentAgent({
         name: "commands",
@@ -26,11 +25,17 @@ const SelectAll = (keys, value, dispacth) => {
 function AgentsCommands() {
   const dispatch = useDispatch();
 
-  const keys = useSelector(
-    (state) => state.agent.current_agent.agent?.commands
-  );
+  const keys =
+    useSelector((state) => state.agent.current_agent.agent?.commands) ||
+    "Loading";
 
   const [selectAll, setSelectAll] = useState(false);
+
+  useEffect(() => {
+    setSelectAll(
+      !Object.values(keys === "Loading" ? [false] : keys).includes(false)
+    );
+  }, [keys]);
 
   return (
     <Box sx={{ pl: 5, overflow: "hidden" }}>
