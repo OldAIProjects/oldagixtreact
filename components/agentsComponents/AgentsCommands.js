@@ -29,6 +29,8 @@ function AgentsCommands() {
     useSelector((state) => state.agent.current_agent.agent?.commands) ||
     "Loading";
 
+  keys.sort();
+
   const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
