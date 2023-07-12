@@ -51,10 +51,14 @@ const AgentsSettings = () => {
   const current_embedder =
     useSelector(
       (state) => state.agent.current_agent.agent?.settings.embedder
-    ) || "Loading";
+    ) || "";
 
-  const name =
-    useSelector((state) => state.agent.current_agent?.name) || "loading";
+  const current_provider =
+    useSelector(
+      (state) => state.agent.current_agent.agent?.settings.provider
+    ) || "";
+
+  const name = useSelector((state) => state.agent.current_agent?.name) || "";
 
   return (
     <Box sx={{ padding: 2, overflow: "hidden" }}>
@@ -79,30 +83,30 @@ const AgentsSettings = () => {
         <Grid item xs={4}>
           <Autocomplete
             options={useSelector((state) => state.provider.providers_names)}
-            value={
-              useSelector(
-                (state) => state.agent.current_agent.agent?.settings.provider
-              ) || "loading"
-            }
+            value={current_provider}
             autoComplete
             fullWidth
             onChange={(e, newValue) => {
-              dispatch(
-                updateCurrentAgent({
-                  name: "settings",
-                  key: "provider",
-                  value: newValue,
-                })
-              );
-              dispatch(retrieveProviderByName(newValue)).then((res) => {
+              if (newValue) {
                 dispatch(
                   updateCurrentAgent({
-                    name: "update_provider",
-                    key: res,
-                    value: current_embedder,
+                    name: "settings",
+                    key: "provider",
+                    value: newValue,
                   })
                 );
-              });
+                dispatch(retrieveProviderByName(newValue)).then((res) => {
+                  dispatch(
+                    updateCurrentAgent({
+                      name: "update_provider",
+                      key: res,
+                      value: current_embedder,
+                    })
+                  );
+                });
+              } else {
+                return current_provider;
+              }
             }}
             id={"providers"}
             renderInput={(params) => (
@@ -113,21 +117,19 @@ const AgentsSettings = () => {
         <Grid item xs={4}>
           <Autocomplete
             options={useSelector((state) => state.provider.embedding_providers)}
-            value={
-              useSelector(
-                (state) => state.agent.current_agent.agent?.settings.embedder
-              ) || "loading"
-            }
+            value={current_embedder}
             autoComplete
             fullWidth
             onChange={(e, newValue) => {
-              dispatch(
-                updateCurrentAgent({
-                  name: "settings",
-                  key: "embedder",
-                  value: newValue,
-                })
-              );
+              newValue
+                ? dispatch(
+                    updateCurrentAgent({
+                      name: "settings",
+                      key: "embedder",
+                      value: newValue,
+                    })
+                  )
+                : current_embedder;
             }}
             id={"embedders"}
             renderInput={(params) => (
