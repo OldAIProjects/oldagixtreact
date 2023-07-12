@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Grow from "@mui/material/Collapse";
 
 import AgentsSettings from "./AgentsSettings";
 import AgentsCommands from "./AgentsCommands";
@@ -27,8 +28,28 @@ export function AgentsMiddle() {
         </Box>
       </Grid>
       <Grid item xs={10} sx={{ overflow: "auto" }}>
-        {(value === "settings" && <AgentsSettings />) ||
-          (value === "commands" && <AgentsCommands />)}
+        <Grow
+          in={value === "settings"}
+          style={{ transformOrigin: "0 0 0" }}
+          {...(value === "settings" ? { timeout: 300 } : {})}
+        >
+          <AgentsSettings />
+        </Grow>
+
+        <Grow
+          in={value === "commands"}
+          style={{ transformOrigin: "0 0 0" }}
+          {...(value === "commands" ? { timeout: 500 } : {})}
+        >
+          <AgentsCommands />
+        </Grow>
+        <Grow
+          in={value === "extensions"}
+          style={{ transformOrigin: "0 0 0" }}
+          {...(value === "extensions" ? { timeout: 500 } : {})}
+        >
+          <div>"WIP"</div>
+        </Grow>
       </Grid>
       <Grid item xs={1}>
         <MiddleButton />
@@ -39,9 +60,10 @@ export function AgentsMiddle() {
 
 export function AgentsRight() {
   return (
-    <Typography variant="h6" component="h2" align="center">
-      {selectedContent}
-    </Typography>
+    <Box sx={{ height: "100%", overflow: "hidden" }}>
+      "WIP"
+      
+    </Box>
   );
 }
 

@@ -12,6 +12,7 @@ export default function AgentsTabs({ value, setValue }) {
     >
       <Tab label="Settings" value="settings"/>
       <Tab label="Commands" value="commands" />
+      <Tab label="Extensions" value="extensions" />
     </Tabs>
   );
 }

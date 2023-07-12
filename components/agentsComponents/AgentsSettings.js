@@ -3,6 +3,8 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 
+import React from "react";
+
 import { useSelector, useDispatch } from "react-redux";
 
 import { updateCurrentAgent } from "@/lib/actions/agentsActions";
@@ -45,19 +47,23 @@ const ProvidersRender = () => {
   );
 };
 
-const AgentsSettings = () => {
+const AgentsSettings = React.forwardRef(function (props, ref) {
   const dispatch = useDispatch();
 
   const current_embedder =
     useSelector(
       (state) => state.agent.current_agent.agent?.settings.embedder
-    ) || "Loading";
+    ) || "";
 
-  const name =
-    useSelector((state) => state.agent.current_agent?.name) || "loading";
+  const current_provider =
+    useSelector(
+      (state) => state.agent.current_agent.agent?.settings.provider
+    ) || "";
+
+  const name = useSelector((state) => state.agent.current_agent?.name) || "";
 
   return (
-    <Box sx={{ padding: 2, overflow: "hidden" }}>
+    <Box sx={{ padding: 2, overflow: "hidden" }} ref={ref} {...props}>
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <TextField
@@ -79,30 +85,30 @@ const AgentsSettings = () => {
         <Grid item xs={4}>
           <Autocomplete
             options={useSelector((state) => state.provider.providers_names)}
-            value={
-              useSelector(
-                (state) => state.agent.current_agent.agent?.settings.provider
-              ) || "loading"
-            }
+            value={current_provider}
             autoComplete
             fullWidth
             onChange={(e, newValue) => {
-              dispatch(
-                updateCurrentAgent({
-                  name: "settings",
-                  key: "provider",
-                  value: newValue,
-                })
-              );
-              dispatch(retrieveProviderByName(newValue)).then((res) => {
+              if (newValue) {
                 dispatch(
                   updateCurrentAgent({
-                    name: "update_provider",
-                    key: res,
-                    value: current_embedder,
+                    name: "settings",
+                    key: "provider",
+                    value: newValue,
                   })
                 );
-              });
+                dispatch(retrieveProviderByName(newValue)).then((res) => {
+                  dispatch(
+                    updateCurrentAgent({
+                      name: "update_provider",
+                      key: res,
+                      value: current_embedder,
+                    })
+                  );
+                });
+              } else {
+                return current_provider;
+              }
             }}
             id={"providers"}
             renderInput={(params) => (
@@ -113,21 +119,19 @@ const AgentsSettings = () => {
         <Grid item xs={4}>
           <Autocomplete
             options={useSelector((state) => state.provider.embedding_providers)}
-            value={
-              useSelector(
-                (state) => state.agent.current_agent.agent?.settings.embedder
-              ) || "loading"
-            }
+            value={current_embedder}
             autoComplete
             fullWidth
             onChange={(e, newValue) => {
-              dispatch(
-                updateCurrentAgent({
-                  name: "settings",
-                  key: "embedder",
-                  value: newValue,
-                })
-              );
+              newValue
+                ? dispatch(
+                    updateCurrentAgent({
+                      name: "settings",
+                      key: "embedder",
+                      value: newValue,
+                    })
+                  )
+                : current_embedder;
             }}
             id={"embedders"}
             renderInput={(params) => (
@@ -139,6 +143,6 @@ const AgentsSettings = () => {
       </Grid>
     </Box>
   );
-};
+});
 
 export default AgentsSettings;

@@ -13,7 +13,7 @@ export function LeftButton() {
     (state) => state.environment.selectedContent
   );
   const values = useSelector((state) => {
-    if (selectedContent === "Agents") return state.agent.agents_names;
+    if (selectedContent === "Agents") return state.agent.agents_names.sort();
   });
   return (
     <Grid
