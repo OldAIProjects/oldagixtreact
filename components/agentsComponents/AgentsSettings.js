@@ -3,6 +3,8 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 
+import React from "react";
+
 import { useSelector, useDispatch } from "react-redux";
 
 import { updateCurrentAgent } from "@/lib/actions/agentsActions";
@@ -45,7 +47,7 @@ const ProvidersRender = () => {
   );
 };
 
-const AgentsSettings = () => {
+const AgentsSettings = React.forwardRef(function (props, ref) {
   const dispatch = useDispatch();
 
   const current_embedder =
@@ -61,7 +63,7 @@ const AgentsSettings = () => {
   const name = useSelector((state) => state.agent.current_agent?.name) || "";
 
   return (
-    <Box sx={{ padding: 2, overflow: "hidden" }}>
+    <Box sx={{ padding: 2, overflow: "hidden" }} ref={ref} {...props}>
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <TextField
@@ -141,6 +143,6 @@ const AgentsSettings = () => {
       </Grid>
     </Box>
   );
-};
+});
 
 export default AgentsSettings;

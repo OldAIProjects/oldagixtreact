@@ -6,5 +6,5 @@ export default function RightComponent() {
   const selectedContent = useSelector(
     (state) => state.environment.selectedContent
   );
-  return <>{selectedContent === "agents" && <AgentsRight />}</>;
+  return <>{selectedContent === "Agents" && <AgentsRight />}</>;
 }

@@ -4,6 +4,8 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import Switch from "@mui/material/Switch";
 
+import React from "react";
+
 import { updateCurrentAgent } from "@/lib/actions/agentsActions";
 
 import { useEffect, useState } from "react";
@@ -22,7 +24,7 @@ const SelectAll = (keys, value, dispacth) => {
   });
 };
 
-function AgentsCommands() {
+const AgentsCommands = React.forwardRef(function (props, ref) {
   const dispatch = useDispatch();
 
   const keys =
@@ -38,7 +40,7 @@ function AgentsCommands() {
   }, [keys]);
 
   return (
-    <Box sx={{ pl: 5, overflow: "hidden" }}>
+    <Box sx={{ pl: 5, overflow: "hidden" }} ref={ref} {...props}>
       <FormControl component="fieldset" variant="standard">
         <FormGroup>
           <FormControlLabel
@@ -56,7 +58,7 @@ function AgentsCommands() {
             }
           />
           {Object.entries(
-            useSelector((state) => state.agent.current_agent.agent.commands)
+            useSelector((state) => state.agent.current_agent.agent?.commands) || {loading: true}
           ).map(([key, value]) => {
             return (
               <FormControlLabel
@@ -84,6 +86,6 @@ function AgentsCommands() {
       </FormControl>
     </Box>
   );
-}
+});
 
 export default AgentsCommands;
