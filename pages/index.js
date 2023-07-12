@@ -4,10 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { defaultLoad } from "@/lib/loader";
 import PersistentDrawerLeft from "./views/Drawer";
+import { useEffect } from "react";
 
 export default function App() {
   const dispatch = useDispatch();
-  defaultLoad(dispatch);
+  useEffect(() => {
+    defaultLoad(dispatch);
+  }, []);
   return (
     <Box
       sx={{
