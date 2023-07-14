@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Grow from "@mui/material/Collapse";
 
 import AgentsSettings from "./AgentsSettings";
@@ -16,53 +15,46 @@ export function AgentsMiddle() {
   const [value, setValue] = useState("settings");
 
   return (
-    <Grid
-      container
-      direction="column"
-      spacing={1}
-      sx={{ height: "100%", overflow: "hidden" }}
-    >
-      <Grid item xs={1}>
-        <Box display="flex" justifyContent="center">
-          <AgentsTabs value={value} setValue={setValue} />
-        </Box>
-      </Grid>
-      <Grid item xs={10} sx={{ overflow: "auto" }}>
-        <Grow
-          in={value === "settings"}
-          style={{ transformOrigin: "0 0 0" }}
-          {...(value === "settings" ? { timeout: 300 } : {})}
-        >
-          <AgentsSettings />
-        </Grow>
+    <Box sx={{ p: 1, height: "100%" }}>
+      <Grid
+        container
+        direction="column"
+        spacing={1}
+        sx={{ height: "100%", overflow: "hidden" }}
+      >
+        <Grid item xs={1}>
+          <Box display="flex" justifyContent="center">
+            <AgentsTabs value={value} setValue={setValue} />
+          </Box>
+        </Grid>
+        <Grid item xs={10} sx={{ overflow: "auto" }}>
+          <Grow
+            in={value === "settings"}
+            style={{ transformOrigin: "0 0 0" }}
+            {...(value === "settings" ? { timeout: 300 } : {})}
+          >
+            <AgentsSettings />
+          </Grow>
 
-        <Grow
-          in={value === "commands"}
-          style={{ transformOrigin: "0 0 0" }}
-          {...(value === "commands" ? { timeout: 500 } : {})}
-        >
-          <AgentsCommands />
-        </Grow>
-        <Grow
-          in={value === "extensions"}
-          style={{ transformOrigin: "0 0 0" }}
-          {...(value === "extensions" ? { timeout: 500 } : {})}
-        >
-          <div>"WIP"</div>
-        </Grow>
+          <Grow
+            in={value === "commands"}
+            style={{ transformOrigin: "0 0 0" }}
+            {...(value === "commands" ? { timeout: 500 } : {})}
+          >
+            <AgentsCommands />
+          </Grow>
+          <Grow
+            in={value === "extensions"}
+            style={{ transformOrigin: "0 0 0" }}
+            {...(value === "extensions" ? { timeout: 500 } : {})}
+          >
+            <div>"WIP"</div>
+          </Grow>
+        </Grid>
+        <Grid item xs={1}>
+          <MiddleButton />
+        </Grid>
       </Grid>
-      <Grid item xs={1}>
-        <MiddleButton />
-      </Grid>
-    </Grid>
-  );
-}
-
-export function AgentsRight() {
-  return (
-    <Box sx={{ height: "100%", overflow: "hidden" }}>
-      "WIP"
-      
     </Box>
   );
 }

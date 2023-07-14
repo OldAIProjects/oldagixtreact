@@ -1,7 +1,8 @@
-import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+
+import Stack from "@mui/material/Stack";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,33 +14,27 @@ export function LeftButton() {
     (state) => state.environment.selectedContent
   );
   const values = useSelector((state) => {
-    if (selectedContent === "Agents") return state.agent.agents_names.sort();
+    if (selectedContent === "Agents") return state.agent.agents_names;
+    if (selectedContent === "Prompts") return state.prompt.prompts_names;
   });
   return (
-    <Grid
-      container
-      direction="column"
-      spacing={2}
-      sx={{ p: 2, overflowY: "auto" }}
-    >
-      {values.map((value) => {
+    <Stack sx={{ p: 2, overflowY: "auto" }} spacing={2}>
+      {values.map((value, id) => {
         return (
-          <Grid item xs key={value}>
-            <Paper elevation={5} sx={{ width: "100%", height: "100%" }}>
-              <Button
-                sx={{ width: "100%", height: "100%" }}
-                onClick={() => {
-                  setElement(selectedContent, value, dispatch);
-                }}
-              >
-                <Typography variant="h6" component="h2" align="center">
-                  {value}
-                </Typography>
-              </Button>
-            </Paper>
-          </Grid>
+          <Paper elevation={5} sx={{ width: "100%", height: "100%" }} key={id}>
+            <Button
+              sx={{ width: "100%", height: "100%" }}
+              onClick={() => {
+                setElement(selectedContent, value, dispatch);
+              }}
+            >
+              <Typography variant="h6" component="h2" align="center">
+                {value}
+              </Typography>
+            </Button>
+          </Paper>
         );
       })}
-    </Grid>
+    </Stack>
   );
 }

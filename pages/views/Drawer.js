@@ -22,6 +22,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { loader } from "@/lib/loader";
 
+import CircularProgress from "@mui/material/CircularProgress";
+
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -86,16 +88,14 @@ export default function PersistentDrawerLeft() {
   };
 
   const isLoading = useSelector((state) => {
-    switch (state.environment.selectedContent) {
-      case "Agents":
-        return state.environment.isAgentsLoading;
-      case "Prompts":
-        return state.environment.isPromptsLoading;
-      case "Chains":
-        return state.environment.isChainsLoading;
-      case "Interactions":
-        return state.environment.isInteractionsLoading;
-    }
+    if (state.environment.selectedContent === "Agents")
+      return state.environment.isAgentsLoading;
+    if (state.environment.selectedContent === "Prompts")
+      return state.environment.isPromptsLoading;
+    if (state.environment.selectedContent === "Chains")
+      return state.environment.isChainsLoading;
+    if (state.environment.selectedContent === "Interactions")
+      return state.environment.isInteractionsLoading;
   });
 
   return (
@@ -141,7 +141,7 @@ export default function PersistentDrawerLeft() {
             <ListItem key={item.text} disablePadding>
               <ListItemButton
                 onClick={() => {
-                  loader(item.text, dispatch);
+                  loader(item.text, dispatch, isLoading);
                 }}
               >
                 <ListItemIcon>{item.icon}</ListItemIcon>
@@ -153,7 +153,20 @@ export default function PersistentDrawerLeft() {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        {isLoading ? <div></div> : <Layout />}
+        {isLoading ? (
+          <Box
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Layout />
+        )}
       </Main>
     </Box>
   );

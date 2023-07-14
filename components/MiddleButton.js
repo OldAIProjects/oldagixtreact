@@ -23,12 +23,12 @@ export const MiddleButton = () => {
 
   const name = useSelector((state) => {
     if (selectedContent === "Agents") return state.agent.current_agent.name;
-    // if (selectedContent === "Prompts") return state.prompt.prompt_name;
+    if (selectedContent === "Prompts") return state.prompt.current_prompt.name;
   });
 
   const data = useSelector((state) => {
     if (selectedContent === "Agents") return state.agent.current_agent;
-    // if (selectedContent === "Prompts") return state.prompt.current_prompt;
+    if (selectedContent === "Prompts") return state.prompt.current_prompt;
   });
   return (
     <Box display="flex" justifyContent="center">
