@@ -32,7 +32,7 @@ export const MiddleButton = () => {
         <Button
           startIcon={<AddRoundedIcon />}
           onClick={() => {
-            addElement(selectedContent, name, data, dispatch);
+            addElement(selectedContent, dispatch);
           }}
         >
           Create
@@ -40,7 +40,7 @@ export const MiddleButton = () => {
         <Button
           startIcon={<UpgradeRoundedIcon />}
           onClick={() => {
-            updateElement(selectedContent, name, data, dispatch);
+            updateElement(selectedContent, dispatch);
           }}
         >
           Update
@@ -48,7 +48,7 @@ export const MiddleButton = () => {
         <Button
           startIcon={<DeleteRoundedIcon />}
           onClick={() => {
-            deleteElement(selectedContent, name, dispatch);
+            deleteElement(selectedContent, dispatch);
           }}
         >
           Delete
