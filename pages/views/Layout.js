@@ -1,5 +1,6 @@
-import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
 
 import MiddleComponent from "@/components/MiddleComponent";
 import LeftComponent from "@/components/LeftComponent";
@@ -10,35 +11,28 @@ function Layout() {
       rounded={+true}
       elevation={1}
       sx={{
-        pl: 2,
-        pb: 5,
+        p: 2,
         width: "100%",
-        height: "100%",
+        height: "95%",
       }}
     >
-      <Grid
-        container
+      <Stack
         direction="row"
+        divider={<Divider orientation="vertical" flexItem />}
+        justifyContent="center"
+        alignItems="center"
         spacing={2}
-        sx={{ width: "100%", height: "100%" }}
+        sx={{height: "100%"}}
       >
-        <Grid item md={3} sx={{ width: "100%", height: "100%" }}>
-          <Paper
-            rounded={+true}
-            elevation={3}
-            sx={{ width: "100%", height: "100%", overflow: "auto" }}
-          >
-            {<LeftComponent />}
-          </Paper>
-        </Grid>
-        <Grid
-          item
-          md={9}
-          sx={{ width: "100%", height: "100%", overflow: "hidden" }}
+        <Paper
+          rounded={+true}
+          elevation={3}
+          sx={{ width: "33%", height: "100%", overflow: "auto" }}
         >
-          <MiddleComponent />
-        </Grid>
-      </Grid>
+          <LeftComponent />
+        </Paper>
+        <MiddleComponent />
+      </Stack>
     </Paper>
   );
 }

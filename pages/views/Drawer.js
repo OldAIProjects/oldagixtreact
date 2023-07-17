@@ -99,7 +99,7 @@ export default function PersistentDrawerLeft() {
   });
 
   return (
-    <Box sx={{ display: "flex", flexGrow: 1 }}>
+    <Box sx={{ display: "flex", flexGrow: 1}}>
       <CustomAppBar
         drawerHandler={handleDrawerOpen}
         drawerStateHandler={open}

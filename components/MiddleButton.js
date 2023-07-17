@@ -21,21 +21,13 @@ export const MiddleButton = () => {
     (state) => state.environment.selectedContent
   );
 
-  const name = useSelector((state) => {
-    if (selectedContent === "Agents") return state.agent.current_agent.name;
-    if (selectedContent === "Prompts") return state.prompt.current_prompt.name;
-  });
-
-  const data = useSelector((state) => {
-    if (selectedContent === "Agents") return state.agent.current_agent;
-    if (selectedContent === "Prompts") return state.prompt.current_prompt;
-  });
   return (
     <Box display="flex" justifyContent="center">
       <ButtonGroup
         orientation="horizontal"
         aria-label="horizontal contained button group"
         variant="text"
+        size="large"
       >
         <Button
           startIcon={<AddRoundedIcon />}
