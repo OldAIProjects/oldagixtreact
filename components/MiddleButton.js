@@ -21,26 +21,18 @@ export const MiddleButton = () => {
     (state) => state.environment.selectedContent
   );
 
-  const name = useSelector((state) => {
-    if (selectedContent === "Agents") return state.agent.current_agent.name;
-    // if (selectedContent === "Prompts") return state.prompt.prompt_name;
-  });
-
-  const data = useSelector((state) => {
-    if (selectedContent === "Agents") return state.agent.current_agent;
-    // if (selectedContent === "Prompts") return state.prompt.current_prompt;
-  });
   return (
     <Box display="flex" justifyContent="center">
       <ButtonGroup
         orientation="horizontal"
         aria-label="horizontal contained button group"
         variant="text"
+        size="large"
       >
         <Button
           startIcon={<AddRoundedIcon />}
           onClick={() => {
-            addElement(selectedContent, name, data, dispatch);
+            addElement(selectedContent, dispatch);
           }}
         >
           Create
@@ -48,7 +40,7 @@ export const MiddleButton = () => {
         <Button
           startIcon={<UpgradeRoundedIcon />}
           onClick={() => {
-            updateElement(selectedContent, name, data, dispatch);
+            updateElement(selectedContent, dispatch);
           }}
         >
           Update
@@ -56,7 +48,7 @@ export const MiddleButton = () => {
         <Button
           startIcon={<DeleteRoundedIcon />}
           onClick={() => {
-            deleteElement(selectedContent, name, dispatch);
+            deleteElement(selectedContent, dispatch);
           }}
         >
           Delete
